@@ -27,7 +27,9 @@ class LocalUserManagerImplementation(private val context: Context): LocalUserMan
 
 }
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = USER_SETTINGS)
+private val readOnlyProperty = preferencesDataStore(name = USER_SETTINGS)
+
+private val Context.dataStore: DataStore<Preferences> by readOnlyProperty
 
 private object Preferenceskeys{
     val APP_ENTRY = booleanPreferencesKey(name = Constants.APP_ENTRY)

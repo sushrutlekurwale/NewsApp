@@ -11,10 +11,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.newsapp.domain.usecases.AppEntryUsecases
 import com.example.newsapp.presentation.onboarding.OnBoardingScreen
+import com.example.newsapp.presentation.onboarding.OnBoardingViewModel
 import com.example.newsapp.ui.theme.NewsAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -24,22 +26,27 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var appEntryUsecases: AppEntryUsecases
+    lateinit var  usecases: AppEntryUsecases
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         installSplashScreen()
-//        enableEdgeToEdge()
 
         lifecycleScope.launch {
-            appEntryUsecases.readAppEntry().collect{
-                Log.d("Test", it.toString())
+            usecases.readAppEntry().collect{
+                Log.d("test", it.toString())
             }
         }
+
+
         setContent {
             NewsAppTheme {
                 Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.background))
-                OnBoardingScreen()
+                val viewModel : OnBoardingViewModel = hiltViewModel()
+                OnBoardingScreen(
+                    event = viewModel::onEvent
+                )
             }
         }
     }
